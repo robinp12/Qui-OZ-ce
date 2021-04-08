@@ -12,8 +12,8 @@ OZFLAGS = --nowarnunused
 all: $(OBJ)
 
 run: all
-	@echo RUN Example.ozf
-	@$(OZENGINE) Example.ozf --db $(DBPATH) $(NOGUI)
+	@echo RUN main.ozf
+	@$(OZENGINE) main.ozf --db $(DBPATH) $(NOGUI)
 
 %.ozf: %.oz
 	@echo OZC $@
