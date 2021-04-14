@@ -5,6 +5,7 @@ import
    OS
    System
    Application
+   List
 define
    CWD = {Atom.toString {OS.getCWD}}#"/"
    Browse = proc {$ Buf} {Browser.browse Buf} end
@@ -50,12 +51,23 @@ in
       in
          { Length2 L 0}
       end
+      
+      fun { SumAux N Acc }
+         if N == 1 then Acc + 1
+         else { SumAux N -1 N * N + Acc } end
+      end
+      fun { Sum N }
+         { SumAux N 0}
+      end
 
       fun {GameDriver Tree}
-      T
+         Result = 0
       in
+      
          for X in ListOfCharacters do
-            {Browse X.'Est-ce que c\'est une fille ?'}
+            if X.'Est-ce que c\'est une fille ?' then {Browse {Sum 2}}
+            else {Browse "faux"}
+            end
          end
          % Toujours renvoyer unit
          unit
