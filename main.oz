@@ -10,7 +10,7 @@ define
    Browse = proc {$ Buf} {Browser.browse Buf} end
    Print = proc{$ S} {System.print S} end
    Args = {Application.getArgs record('nogui'(single type:bool default:false optional:true)
-									  'db'(single type:string default:CWD#"database.txt"))} 
+									  'db'(single type:string default:CWD#"databaseTest.txt"))} 
 in 
    local
 	  NoGUI = Args.'nogui'
@@ -25,6 +25,34 @@ in
      fun {TreeBuilder Database}
        leaf(nil)
      end
+
+      /* Premier element d'un tuple */
+      fun { Head L }
+         case L of H | T then H
+         [] nil then nil
+         end
+      end
+
+      /* Restant des elements du tuple */
+      fun { Tail L }
+         case L of H | T then T
+         [] nil then nil
+         end
+      end
+
+      /* Longueur du tuple */
+      fun { Length L }
+         fun { Length2 L N }
+            case L of H | T then { Length2 T N +1}
+            [] nil then N
+         end
+      end
+      in
+         { Length2 L 0}
+      end
+
+
+         {Browse ListOfCharacters.2.1.1}
 
       fun {GameDriver Tree}
          Result
@@ -62,7 +90,7 @@ in
          else
              {Print Result}
          end
-
+         
          % Toujours renvoyer unit
          unit
       end
