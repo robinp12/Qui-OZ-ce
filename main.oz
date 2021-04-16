@@ -51,28 +51,19 @@ in
       in
          { Length2 L 0}
       end
-      
-      fun { SumAux N Acc }
-         if N == 1 then Acc + 1
-         else { SumAux N -1 N * N + Acc } end
-      end
-      fun { Sum N }
-         { SumAux N 0}
-      end
-
+   
       fun {GameDriver Tree}
          Result = 0
       in
-      
-         for X in ListOfCharacters do
-            if X.'Est-ce que c\'est une fille ?' then {Browse {Sum 2}}
-            else {Browse "faux"}
-            end
-         end
          % Toujours renvoyer unit
          unit
       end
    in
+   for X in ListOfCharacters do
+         if X.'Est-ce que c\'est une fille ?' then {Browse 'Vrai'}
+         else {Browse 'faux'}
+         end
+   end
       {ProjectLib.play opts(characters:ListOfCharacters driver:GameDriver 
                             noGUI:false builder:TreeBuilder 
                             autoPlay:ListOfAnswers newCharacter:NewCharacter)}
