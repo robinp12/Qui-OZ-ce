@@ -17,6 +17,7 @@ define
    TreeB
    T1
    T2
+   QuestionCounterAcc
 in 
    local
 	  NoGUI = Args.'nogui'
@@ -114,23 +115,47 @@ in
    Res = result(1:@A 2:@B 3:@C 4:@D)
    
    end
+      %%             1
+      %%            / \
+      %%           2   2
+      %%          / \ / \
+      %%         3  3 3  3
+      %%        / \ /
+      %%       4  4 4
 
- T1 = tree(key:1 value:true tree() tree())
- T2 = tree(key:1 value:faux leaf leaf)
-   fun {TreeB K W T}
-      case T
-      of leaf then tree(key:K value:W leaf leaf)
-      [] tree(key:Y value:V T1 T2) andthen K==Y then
-      tree(key:K value:W T1 T2)
-      [] tree(key:Y value:V T1 T2) andthen K<Y then
-      tree(key:Y value:V {TreeB K W T1} T2)
-      [] tree(key:Y value:V T1 T2) andthen K>Y then
-      tree(key:Y value:V T1 {TreeB K W T2})
+ T1 = tree(1:'A-t-il des cheveux?' 'false':tree(leaf) 'true':tree(leaf))
+ T2 = tree(1:'A-t-il une soeur?'
+                                                            false:tree(1:'Est-ce un humain'
+                                                                              false:tree(1:'Est-ce une fille?'
+                                                                                                false:leaf(['Said Snider'])
+                                                                                                true:leaf(['Georgie Rudd']))
+                                                                               true:leaf(['Brenna Small']))
+                                                            true:tree(1:'A-t-il des cheveux noirs?'
+                                                                            false:tree(1:'Est-ce une fille?'
+                                                                                             false:leaf(['Zayn Bryan'])
+                                                                                             true:leaf(['Luis Black']))
+                                                                            true:tree(1:'Est-ce un humain'
+                                                                                            false:leaf(['Havin Craig'])
+                                                                                            true:leaf(['Mercy Hood']))))
+       fun {QuestionCounterAcc CharacterList Acc}
+         local A B C D in
+            case CharacterList.1
+            of nil then A
+            [] character(Name 'Est-ce que c\'est une fille ?':IsGirl 'A-t-il des cheveux noirs ?':HasBlackHair 'Porte-t-il des lunettes ?':HasGlasses 'A-t-il des cheveux roux ?':HasRedHair) then 
+               {Print Name}
+               if IsGirl then A = Acc.1 + 1 else A = Acc.1 end
+               if HasBlackHair then B = Acc.2 + 1 else B = Acc.2 end
+               if HasGlasses then C = Acc.3 + 1 else C = Acc.3 end
+               if HasRedHair then D = Acc.4 + 1 else D = Acc.4 end
+               {Print Acc}
+               {QuestionCounterAcc CharacterList.2 acc(A B C D)}
+            else 
+               nil
+            end
       end
-   end
-
-   {Browse {TreeB 1 true T1}}
-   {Browse T1}
+    end
+   {Print {Database}}
+   {Print {QuestionCounterAcc ListOfCharacters acc(0 0 0 0)}}
 
       {ProjectLib.play opts(characters:ListOfCharacters driver:GameDriver 
                             noGUI:false builder:TreeBuilder 
