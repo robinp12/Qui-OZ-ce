@@ -137,10 +137,10 @@ in
                                                                             true:tree(1:'Est-ce un humain'
                                                                                             false:leaf(['Havin Craig'])
                                                                                             true:leaf(['Mercy Hood']))))
-       fun {QuestionCounterAcc CharacterList Acc}
+       /*fun {QuestionCounterAcc CharacterList Acc}
          local A B C D in
-            case CharacterList.1
-            of nil then A
+            if (CharacterList != nil) then 
+               case CharacterList.1 of nil then A
             [] character(Name 'Est-ce que c\'est une fille ?':IsGirl 'A-t-il des cheveux noirs ?':HasBlackHair 'Porte-t-il des lunettes ?':HasGlasses 'A-t-il des cheveux roux ?':HasRedHair) then 
                {Print Name}
                if IsGirl then A = Acc.1 + 1 else A = Acc.1 end
@@ -149,17 +149,51 @@ in
                if HasRedHair then D = Acc.4 + 1 else D = Acc.4 end
                {Print Acc}
                {QuestionCounterAcc CharacterList.2 acc(A B C D)}
+            
+            else 
+               nil
+            end
+            else
+               case CharacterList of nil then A
+            [] character(Name 'Est-ce que c\'est une fille ?':IsGirl 'A-t-il des cheveux noirs ?':HasBlackHair 'Porte-t-il des lunettes ?':HasGlasses 'A-t-il des cheveux roux ?':HasRedHair) then 
+               {Print Name}
+               if IsGirl then A = Acc.1 + 1 else A = Acc.1 end
+               if HasBlackHair then B = Acc.2 + 1 else B = Acc.2 end
+               if HasGlasses then C = Acc.3 + 1 else C = Acc.3 end
+               if HasRedHair then D = Acc.4 + 1 else D = Acc.4 end
+               {Print Acc}            
             else 
                nil
             end
       end
     end
    {Print {Database}}
-   {Print {QuestionCounterAcc ListOfCharacters acc(0 0 0 0)}}
+   {Print {QuestionCounterAcc ListOfCharacters acc(0 0 0 0)}}*/
+   local ListFullRecord ListQuestionRecord Di in
+      {Arity ListOfCharacters.1 ListFullRecord }
+      ListQuestionRecord = ListFullRecord.2
+      {Browse ListQuestionRecord}
+      {Dictionary.new Di}
+      /*{Dictionary.put ListOfCharacters.1.'A-t-il une soeur?' 7}*/
+      for X in ListQuestionRecord do
+         {Dictionary.put Di X 0}
+      end
+      {Browse Di}
+   end
+   
+   /*for X in ListOfCharacters do
+      if X.'A-t-il une soeur?' then A:=@A+1 end
+      if X.'Est-ce un personnage fictif?' then B:=@B+1 end
+      if X.'A-t-il des cheveux?' then C:=@C+1 end
+      if X.'Est-ce un humain' then D:=@D+1 end
+      if X.'A-t-il des cheveux noirs?' then E:=@E+1 end
+      if X.'Porte-t-il des lunettes?' then F:=@F+1 end
+      if X.'A-t-il des cheveux blond?' then G:=@G+1 end
+      if X.'Est-ce une fille?' then H:=@H+1 end*/
 
-      {ProjectLib.play opts(characters:ListOfCharacters driver:GameDriver 
-                            noGUI:false builder:TreeBuilder 
-                            autoPlay:ListOfAnswers newCharacter:NewCharacter)}
-      {Application.exit 0}
+   {ProjectLib.play opts(characters:ListOfCharacters driver:GameDriver 
+                           noGUI:false builder:TreeBuilder 
+                           autoPlay:ListOfAnswers newCharacter:NewCharacter)}
+   {Application.exit 0}
    end
 end
