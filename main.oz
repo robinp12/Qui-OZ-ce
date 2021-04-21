@@ -11,7 +11,7 @@ define
    Browse = proc {$ Buf} {Browser.browse Buf} end
    Print = proc{$ S} {System.print S} end
    Args = {Application.getArgs record('nogui'(single type:bool default:false optional:true)
-									  'db'(single type:string default:CWD#"database.txt"))} 
+									  'db'(single type:string default:CWD#"databaseTest.txt"))} 
    TestDBTest
    Database
    TreeB
@@ -172,13 +172,18 @@ in
    local ListFullRecord ListQuestionRecord Di in
       {Arity ListOfCharacters.1 ListFullRecord }
       ListQuestionRecord = ListFullRecord.2
-      {Browse ListQuestionRecord}
+      /*{Browse ListQuestionRecord}*/
       {Dictionary.new Di}
       /*{Dictionary.put ListOfCharacters.1.'A-t-il une soeur?' 7}*/
+      /*On remplit le dictionnaire des questions de la db */
       for X in ListQuestionRecord do
          {Dictionary.put Di X 0}
       end
-      {Browse {Dictionary.keys Di}}
+      {Browse {Dictionary.entries Di}}
+      /*pour chaque question, on veut compter le nombre de true/false total */
+      for X in ListOfCharacters do
+         {Record.forAll X
+      end
    end
    
    /*for X in ListOfCharacters do
