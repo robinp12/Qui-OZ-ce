@@ -178,7 +178,7 @@ in
       for X in ListQuestionRecord do
          {Dictionary.put Di X 0}
       end
-      {Browse Di}
+      {Browse {Dictionary.keys Di}}
    end
    
    /*for X in ListOfCharacters do
