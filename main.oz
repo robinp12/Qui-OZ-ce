@@ -5,7 +5,6 @@ import
    OS
    System
    Application
-   List
 define
    CWD = {Atom.toString {OS.getCWD}}#"/"
    Browse = proc {$ Buf} {Browser.browse Buf} end
@@ -46,26 +45,35 @@ in
       end
    in
 
-   local CreateTree TrueBranch FalseBranch ListQuestion QRecord CharactersLength in
-      fun {CreateTree}
-         nil
+   local ToRecord CreateTree TrueBranch FalseBranch QuestionRecord CharactersLength in
+      fun {CreateTree X}
+         case X of nil then leaf('nom')
+         [] H|T then tree(1:H false:{FalseBranch T} true:{TrueBranch T})
+         end
       end
-      fun {TrueBranch}
-         nil
+      fun {TrueBranch X}
+         case X of nil then leaf('nom')
+         [] H|T then tree(1:H false:{FalseBranch T} true:{TrueBranch T})
+         end
       end
-      fun {FalseBranch}
-         nil
+      fun {FalseBranch X}
+         case X of nil then leaf('nom')
+         [] H|T then tree(1:H false:{FalseBranch T} true:{TrueBranch T})
+         end
       end
-      fun {ListQuestion X}
-         case X of nil then nil
-         [] H|T then tree(1:H false:{ListQuestion T} true:{ListQuestion T})
+      fun {ToRecord X}
+         case X of H|T then H#0 |{ToRecord T}
+         [] nil then nil
          end
       end
 
-      QRecord = {Arity ListOfCharacters.1}.2
+      QuestionRecord = {Record.arity ListOfCharacters.1}.2
       CharactersLength = {Length ListOfCharacters}
       
-      {Browse {ListQuestion QRecord}}
+      {Browse {CreateTree QuestionRecord}}
+      {Browse {ToRecord QuestionRecord}}
+      {Browse charactersLength(CharactersLength)}
+      /*{Browse QuestionRecord}*/
    end
    
    /*{ProjectLib.play opts(characters:ListOfCharacters driver:GameDriver 
