@@ -11,7 +11,7 @@ define
    Browse = proc {$ Buf} {Browser.browse Buf} end
    Print = proc{$ S} {System.print S} end
    Args = {Application.getArgs record('nogui'(single type:bool default:false optional:true)
-									  'db'(single type:string default:CWD#"databaseTest.txt"))} 
+									  'db'(single type:string default:CWD#"database.txt"))} 
    TestDBTest
    Database
    TreeB
@@ -70,7 +70,7 @@ in
       fun {GameDriver Tree}
          Result = 0
       in
-         % Toujours renvoyer unit
+         % Toujours renvoyer unit  
          unit
       end
    in
@@ -96,24 +96,34 @@ in
       H:= @H - ({Length ListOfCharacters} - @H)
    Res = result(1:@A 2:@B 3:@C 4:@D 5:@E 6:@F 7:@G 8:@H)
    end
+   local L L2 R1 in
+      fun {Database Di}
+      for X in ListOfCharacters do
+      /* Renvoi toutes les question dans le L*/
+            {Record.arity X L}
+            /* Partie de droite sans le nom */
+            L2 = L.2
+            for Y in L2 do
+            {Browse {Dictionary.get Di Y}}
+               A := {Dictionary.get Di Y} + 1
+               {Dictionary.put Di Y @A}
+            end
 
-   fun {Database}
-     for X in ListOfCharacters do
-            if X.'Est-ce que c\'est une fille ?' then A:=@A+1 
-            end
-            if X.'A-t-il des cheveux noirs ?' then B:=@B+1 
-            end
-            if X.'Porte-t-il des lunettes ?' then C:=@C+1 
-            end
-            if X.'A-t-il des cheveux roux ?' then D:=@D+1 
-            end
+            /*   if X.'Est-ce que c\'est une fille ?' then A:=@A+1 
+               end
+               if X.'A-t-il des cheveux noirs ?' then B:=@B+1 
+               end
+               if X.'Porte-t-il des lunettes ?' then C:=@C+1 
+               end
+               if X.'A-t-il des cheveux roux ?' then D:=@D+1 
+               end*/
+         end
+         A:= @A - ({Length ListOfCharacters} - @A)
+         B:= @B - ({Length ListOfCharacters} - @B)
+         C:= @C - ({Length ListOfCharacters} - @C)
+         D:= @D - ({Length ListOfCharacters} - @D)
+      Res = result(1:@A 2:@B 3:@C 4:@D)
       end
-      A:= @A - ({Length ListOfCharacters} - @A)
-      B:= @B - ({Length ListOfCharacters} - @B)
-      C:= @C - ({Length ListOfCharacters} - @C)
-      D:= @D - ({Length ListOfCharacters} - @D)
-   Res = result(1:@A 2:@B 3:@C 4:@D)
-   
    end
       %%             1
       %%            / \
@@ -123,20 +133,6 @@ in
       %%        / \ /
       %%       4  4 4
 
- T1 = tree(1:'A-t-il des cheveux?' 'false':tree(leaf) 'true':tree(leaf))
- T2 = tree(1:'A-t-il une soeur?'
-                                                            false:tree(1:'Est-ce un humain'
-                                                                              false:tree(1:'Est-ce une fille?'
-                                                                                                false:leaf(['Said Snider'])
-                                                                                                true:leaf(['Georgie Rudd']))
-                                                                               true:leaf(['Brenna Small']))
-                                                            true:tree(1:'A-t-il des cheveux noirs?'
-                                                                            false:tree(1:'Est-ce une fille?'
-                                                                                             false:leaf(['Zayn Bryan'])
-                                                                                             true:leaf(['Luis Black']))
-                                                                            true:tree(1:'Est-ce un humain'
-                                                                                            false:leaf(['Havin Craig'])
-                                                                                            true:leaf(['Mercy Hood']))))
        /*fun {QuestionCounterAcc CharacterList Acc}
          local A B C D in
             if (CharacterList != nil) then 
@@ -175,35 +171,16 @@ in
       ListQuestionRecord = ListFullRecord.2
       /*{Browse ListQuestionRecord}*/
       {Dictionary.new Di}
-      
       /*On remplit le dictionnaire des questions de la db */
+      
       for X in ListQuestionRecord do
          {Dictionary.put Di X 0}
       end
       {Browse {Dictionary.entries Di}}
       /*pour chaque question, on veut compter le nombre de true/false total */
-      
-      for X in ListOfCharacters do
-         /*{Browse X}*/
-         {Browse {Arity X }}
-      end
-      /*T=tree(key:a left:L right:R value:1)
-      W=tree(a L R 1)
-      {Browse {Arity ListOfCharacters.1}}
-      {Browse {Arity W}}*/
 
    end
    
-   /*for X in ListOfCharacters do
-      if X.'A-t-il une soeur?' then A:=@A+1 end
-      if X.'Est-ce un personnage fictif?' then B:=@B+1 end
-      if X.'A-t-il des cheveux?' then C:=@C+1 end
-      if X.'Est-ce un humain' then D:=@D+1 end
-      if X.'A-t-il des cheveux noirs?' then E:=@E+1 end
-      if X.'Porte-t-il des lunettes?' then F:=@F+1 end
-      if X.'A-t-il des cheveux blond?' then G:=@G+1 end
-      if X.'Est-ce une fille?' then H:=@H+1 end*/
-
    {ProjectLib.play opts(characters:ListOfCharacters driver:GameDriver 
                            noGUI:false builder:TreeBuilder 
                            autoPlay:ListOfAnswers newCharacter:NewCharacter)}

@@ -18,6 +18,7 @@ run: all
 %.ozf: %.oz
 	@echo OZC $@
 	@$(OZC) $(OZFLAGS) -c $< -o $@
+	ozengine .\main.ozf
 
 .PHONY: clean
 
