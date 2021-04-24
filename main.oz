@@ -176,8 +176,9 @@ in
       for X in ListQuestionRecord do
          {Dictionary.put Di X 0}
       end
-      {Browse {Dictionary.entries Di}}
       /*pour chaque question, on veut compter le nombre de true/false total */
+      
+      {Browse {Database Di}}
 
    end
    
