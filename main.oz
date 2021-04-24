@@ -13,10 +13,8 @@ define
    Args = {Application.getArgs record('nogui'(single type:bool default:false optional:true)
 									  'db'(single type:string default:CWD#"database.txt"))} 
    TestDBTest
+   Res
    Database
-   TreeB
-   T1
-   T2
    QuestionCounterAcc
 in 
    local
@@ -28,24 +26,19 @@ in
 	  % assigné un argument 	
      ListOfAnswersFile = CWD#"test_answers.txt"
      ListOfAnswers = {ProjectLib.loadCharacter file CWD#"test_answers.txt"}
-     Res
+
+      A={NewCell 0}
+      B={NewCell 0}
+      C={NewCell 0}
+      D={NewCell 0}
+      E={NewCell 0}
+      F={NewCell 0}
+      G={NewCell 0}
+      H={NewCell 0}
+
      fun {TreeBuilder Database}
        leaf(nil)
      end
-
-      /* Premier element d'un tuple */
-      fun { Head L }
-         case L of H | T then H
-         [] nil then nil
-         end
-      end
-
-      /* Restant des elements du tuple */
-      fun { Tail L }
-         case L of H | T then T
-         [] nil then nil
-         end
-      end
 
       /* Longueur du tuple */
       fun { Length L }
@@ -58,15 +51,6 @@ in
          { Length2 L 0}
       end
    
-      A={NewCell 0}
-      B={NewCell 0}
-      C={NewCell 0}
-      D={NewCell 0}
-      E={NewCell 0}
-      F={NewCell 0}
-      G={NewCell 0}
-      H={NewCell 0}
-
       fun {GameDriver Tree}
          Result = 0
       in
@@ -75,49 +59,36 @@ in
       end
    in
 
-   fun {TestDBTest}
-      for X in ListOfCharacters do
-            if X.'A-t-il une soeur?' then A:=@A+1 end
-            if X.'Est-ce un personnage fictif?' then B:=@B+1 end
-            if X.'A-t-il des cheveux?' then C:=@C+1 end
-            if X.'Est-ce un humain' then D:=@D+1 end
-            if X.'A-t-il des cheveux noirs?' then E:=@E+1 end
-            if X.'Porte-t-il des lunettes?' then F:=@F+1 end
-            if X.'A-t-il des cheveux blond?' then G:=@G+1 end
-            if X.'Est-ce une fille?' then H:=@H+1 end
-      end
-      A:= @A - ({Length ListOfCharacters} - @A)
-      B:= @B - ({Length ListOfCharacters} - @B)
-      C:= @C - ({Length ListOfCharacters} - @C)
-      D:= @D - ({Length ListOfCharacters} - @D)
-      E:= @E - ({Length ListOfCharacters} - @E)
-      F:= @F - ({Length ListOfCharacters} - @F)
-      G:= @G - ({Length ListOfCharacters} - @G)
-      H:= @H - ({Length ListOfCharacters} - @H)
-   Res = result(1:@A 2:@B 3:@C 4:@D 5:@E 6:@F 7:@G 8:@H)
-   end
-   local L L2 R1 in
+   local L L2 R1 Acc J2 in
       fun {Database Di}
-      for X in ListOfCharacters do
-      /* Renvoi toutes les question dans le L*/
-            {Record.arity X L}
-            /* Partie de droite sans le nom */
-            L2 = L.2
-            for Y in L2 do
-            {Browse {Dictionary.get Di Y}}
-               A := {Dictionary.get Di Y} + 1
-               {Dictionary.put Di Y @A}
+         fun {Acc X}
+            case X of nil then nil
+            [] H|T then {Browse H} {Acc T}
             end
-
-            /*   if X.'Est-ce que c\'est une fille ?' then A:=@A+1 
-               end
-               if X.'A-t-il des cheveux noirs ?' then B:=@B+1 
-               end
-               if X.'Porte-t-il des lunettes ?' then C:=@C+1 
-               end
-               if X.'A-t-il des cheveux roux ?' then D:=@D+1 
-               end*/
          end
+
+         for X in ListOfCharacters do
+               /* Renvoi toutes les question dans le L*/
+               {Record.arity X L}
+
+               /* Partie de droite sans le nom */
+               L2 = L.2
+               for Y in L2 do
+                  H := {Dictionary.get Di Y} + 1
+               /*{Dictionary.put Di Y @A}*/
+               end
+
+               
+               /*{Browse {Acc {Record.toList X}}}*/
+               /* Renvoi toutes les reponses */
+               for Y in {Record.toList X} do
+                  {Browse Y}
+                  /*Compte les vrais de TOUTES les questions */
+/* Reste plus qu'a compter les vrais/faux independement par question*/
+                  if Y == true then A:=@A+1
+                  end
+               end
+            end
          A:= @A - ({Length ListOfCharacters} - @A)
          B:= @B - ({Length ListOfCharacters} - @B)
          C:= @C - ({Length ListOfCharacters} - @C)
@@ -133,52 +104,19 @@ in
       %%        / \ /
       %%       4  4 4
 
-       /*fun {QuestionCounterAcc CharacterList Acc}
-         local A B C D in
-            if (CharacterList != nil) then 
-               case CharacterList.1 of nil then A
-            [] character(Name 'Est-ce que c\'est une fille ?':IsGirl 'A-t-il des cheveux noirs ?':HasBlackHair 'Porte-t-il des lunettes ?':HasGlasses 'A-t-il des cheveux roux ?':HasRedHair) then 
-               {Print Name}
-               if IsGirl then A = Acc.1 + 1 else A = Acc.1 end
-               if HasBlackHair then B = Acc.2 + 1 else B = Acc.2 end
-               if HasGlasses then C = Acc.3 + 1 else C = Acc.3 end
-               if HasRedHair then D = Acc.4 + 1 else D = Acc.4 end
-               {Print Acc}
-               {QuestionCounterAcc CharacterList.2 acc(A B C D)}
-            
-            else 
-               nil
-            end
-            else
-               case CharacterList of nil then A
-            [] character(Name 'Est-ce que c\'est une fille ?':IsGirl 'A-t-il des cheveux noirs ?':HasBlackHair 'Porte-t-il des lunettes ?':HasGlasses 'A-t-il des cheveux roux ?':HasRedHair) then 
-               {Print Name}
-               if IsGirl then A = Acc.1 + 1 else A = Acc.1 end
-               if HasBlackHair then B = Acc.2 + 1 else B = Acc.2 end
-               if HasGlasses then C = Acc.3 + 1 else C = Acc.3 end
-               if HasRedHair then D = Acc.4 + 1 else D = Acc.4 end
-               {Print Acc}            
-            else 
-               nil
-            end
-      end
-    end
-   {Print {Database}}
-   {Print {QuestionCounterAcc ListOfCharacters acc(0 0 0 0)}}*/
+       
    local ListFullRecord ListQuestionRecord Di List T W L R in
 
       {Arity ListOfCharacters.1 ListFullRecord }
-      ListQuestionRecord = ListFullRecord.2
-      /*{Browse ListQuestionRecord}*/
+
       {Dictionary.new Di}
-      /*On remplit le dictionnaire des questions de la db */
-      
-      for X in ListQuestionRecord do
+      /*On remplit le dictionnaire des questions de la db */      
+      for X in ListFullRecord.2 do
          {Dictionary.put Di X 0}
       end
       /*pour chaque question, on veut compter le nombre de true/false total */
       
-      {Browse {Database Di}}
+     {Browse {Database Di}}
 
    end
    
