@@ -11,34 +11,21 @@ define
    Browse = proc {$ Buf} {Browser.browse Buf} end
    Print = proc{$ S} {System.print S} end
    Args = {Application.getArgs record('nogui'(single type:bool default:false optional:true)
-									  'db'(single type:string default:CWD#"database.txt"))} 
-   TestDBTest
-   Res
-   Database
-   QuestionCounterAcc
+									  'db'(single type:string default:CWD#"database.txt"))}    
 in 
    local
-	  NoGUI = Args.'nogui'
-	  DB = Args.'db'
-     ListOfCharacters = {ProjectLib.loadDatabase file Args.'db'}
-     NewCharacter = {ProjectLib.loadCharacter file CWD#"new_character.txt"}
-	  % Vous devez modifier le code pour que cette variable soit
-	  % assigné un argument 	
-     ListOfAnswersFile = CWD#"test_answers.txt"
-     ListOfAnswers = {ProjectLib.loadCharacter file CWD#"test_answers.txt"}
+      NoGUI = Args.'nogui'
+      DB = Args.'db'
+      ListOfCharacters = {ProjectLib.loadDatabase file Args.'db'}
+      NewCharacter = {ProjectLib.loadCharacter file CWD#"new_character.txt"}
+      % Vous devez modifier le code pour que cette variable soit
+      % assigné un argument 	
+      ListOfAnswersFile = CWD#"test_answers.txt"
+      ListOfAnswers = {ProjectLib.loadCharacter file CWD#"test_answers.txt"}
 
-      A={NewCell 0}
-      B={NewCell 0}
-      C={NewCell 0}
-      D={NewCell 0}
-      E={NewCell 0}
-      F={NewCell 0}
-      G={NewCell 0}
-      H={NewCell 0}
-
-     fun {TreeBuilder Database}
-       leaf(nil)
-     end
+      fun {TreeBuilder Database}
+         leaf(nil)
+      end
 
       /* Longueur du tuple */
       fun { Length L }
@@ -59,70 +46,31 @@ in
       end
    in
 
-   local L L2 R1 Acc J2 in
-      fun {Database Di}
-         fun {Acc X}
-            case X of nil then nil
-            [] H|T then {Browse H} {Acc T}
-            end
+   local CreateTree TrueBranch FalseBranch ListQuestion QRecord CharactersLength in
+      fun {CreateTree}
+         nil
+      end
+      fun {TrueBranch}
+         nil
+      end
+      fun {FalseBranch}
+         nil
+      end
+      fun {ListQuestion X}
+         case X of nil then nil
+         [] H|T then tree(1:H false:{ListQuestion T} true:{ListQuestion T})
          end
-
-         for X in ListOfCharacters do
-               /* Renvoi toutes les question dans le L*/
-               {Record.arity X L}
-
-               /* Partie de droite sans le nom */
-               L2 = L.2
-               for Y in L2 do
-                  H := {Dictionary.get Di Y} + 1
-               /*{Dictionary.put Di Y @A}*/
-               end
-
-               
-               /*{Browse {Acc {Record.toList X}}}*/
-               /* Renvoi toutes les reponses */
-               for Y in {Record.toList X} do
-                  {Browse Y}
-                  /*Compte les vrais de TOUTES les questions */
-/* Reste plus qu'a compter les vrais/faux independement par question*/
-                  if Y == true then A:=@A+1
-                  end
-               end
-            end
-         A:= @A - ({Length ListOfCharacters} - @A)
-         B:= @B - ({Length ListOfCharacters} - @B)
-         C:= @C - ({Length ListOfCharacters} - @C)
-         D:= @D - ({Length ListOfCharacters} - @D)
-      Res = result(1:@A 2:@B 3:@C 4:@D)
       end
-   end
-      %%             1
-      %%            / \
-      %%           2   2
-      %%          / \ / \
-      %%         3  3 3  3
-      %%        / \ /
-      %%       4  4 4
 
-       
-   local ListFullRecord ListQuestionRecord Di List T W L R in
-
-      {Arity ListOfCharacters.1 ListFullRecord }
-
-      {Dictionary.new Di}
-      /*On remplit le dictionnaire des questions de la db */      
-      for X in ListFullRecord.2 do
-         {Dictionary.put Di X 0}
-      end
-      /*pour chaque question, on veut compter le nombre de true/false total */
+      QRecord = {Arity ListOfCharacters.1}.2
+      CharactersLength = {Length ListOfCharacters}
       
-     {Browse {Database Di}}
-
+      {Browse {ListQuestion QRecord}}
    end
    
-   {ProjectLib.play opts(characters:ListOfCharacters driver:GameDriver 
+   /*{ProjectLib.play opts(characters:ListOfCharacters driver:GameDriver 
                            noGUI:false builder:TreeBuilder 
                            autoPlay:ListOfAnswers newCharacter:NewCharacter)}
-   {Application.exit 0}
+   {Application.exit 0}*/
    end
 end
