@@ -45,7 +45,7 @@ in
       end
    in
 
-   local ToRecord CreateTree TrueBranch FalseBranch QuestionRecord CharactersLength in
+   local ToRecord CreateTree TrueBranch FalseBranch QuestionRecord CharactersLength QuestionLength in
       fun {CreateTree X}
          case X of nil then leaf('nom')
          [] H|T then tree(1:H false:{FalseBranch T} true:{TrueBranch T})
@@ -69,10 +69,12 @@ in
 
       QuestionRecord = {Record.arity ListOfCharacters.1}.2
       CharactersLength = {Length ListOfCharacters}
+      QuestionLength =  {Length QuestionRecord}
       
       {Browse {CreateTree QuestionRecord}}
       {Browse {ToRecord QuestionRecord}}
       {Browse charactersLength(CharactersLength)}
+      {Browse questionLength(QuestionLength)}
       /*{Browse QuestionRecord}*/
    end
    
