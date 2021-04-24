@@ -169,21 +169,29 @@ in
     end
    {Print {Database}}
    {Print {QuestionCounterAcc ListOfCharacters acc(0 0 0 0)}}*/
-   local ListFullRecord ListQuestionRecord Di in
+   local ListFullRecord ListQuestionRecord Di List T W L R in
+
       {Arity ListOfCharacters.1 ListFullRecord }
       ListQuestionRecord = ListFullRecord.2
       /*{Browse ListQuestionRecord}*/
       {Dictionary.new Di}
-      /*{Dictionary.put ListOfCharacters.1.'A-t-il une soeur?' 7}*/
+      
       /*On remplit le dictionnaire des questions de la db */
       for X in ListQuestionRecord do
          {Dictionary.put Di X 0}
       end
       {Browse {Dictionary.entries Di}}
       /*pour chaque question, on veut compter le nombre de true/false total */
+      
       for X in ListOfCharacters do
-         {Record.forAll X
+         /*{Browse X}*/
+         {Browse {Arity X }}
       end
+      /*T=tree(key:a left:L right:R value:1)
+      W=tree(a L R 1)
+      {Browse {Arity ListOfCharacters.1}}
+      {Browse {Arity W}}*/
+
    end
    
    /*for X in ListOfCharacters do
