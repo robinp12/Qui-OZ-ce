@@ -2,7 +2,8 @@ OZC = ozc
 OZENGINE = ozengine
 
 DBPATH= database.txt
-NOGUI= "" # set this variable to --nogui if you don't want the GUI
+ANSWERFILE= test_answers.txt
+NOGUI= "--nogui" # set this variable to --nogui if you don't want the GUI
 
 SRC=$(wildcard *.oz)
 OBJ=$(SRC:.oz=.ozf)
@@ -13,7 +14,7 @@ all: $(OBJ)
 
 run: all
 	@echo RUN main.ozf
-	@$(OZENGINE) main.ozf --db $(DBPATH) $(NOGUI)
+	@$(OZENGINE) main.ozf --ans $(ANSWERFILE) --db $(DBPATH) $(NOGUI)
 
 %.ozf: %.oz
 	@echo OZC $@
