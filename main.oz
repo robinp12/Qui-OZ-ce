@@ -10,7 +10,7 @@ define
    Browse = proc {$ Buf} {Browser.browse Buf} end
    Print = proc{$ S} {System.print S} end
    Args = {Application.getArgs record('nogui'(single type:bool default:false optional:true)
-									  'db'(single type:string default:CWD#"database.txt")
+									  'db'(single type:string default:CWD#"databaseTest.txt")
                              'ans'(single type:string default:CWD#"test_answers.txt"))} 
 in 
    local
