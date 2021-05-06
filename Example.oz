@@ -10,7 +10,9 @@ define
    Browse = proc {$ Buf} {Browser.browse Buf} end
    Print = proc{$ S} {System.print S} end
    Args = {Application.getArgs record('nogui'(single type:bool default:false optional:true)
-									  'db'(single type:string default:CWD#"database.txt"))} 
+									  'db'(single type:string default:CWD#"database.txt")
+                                                          'ans'(single type:string default:CWD#"test_answers.txt"))} 
+
 in 
    local
 	  NoGUI = Args.'nogui'
@@ -56,45 +58,9 @@ in
             {Print 'Je me suis trompé\n'}
             {Print {ProjectLib.surrender}}
 
-            % warning, Browse do not work in noGUI mode
-            {Browse {ProjectLib.askQuestion 'A-t-il des cheveux roux ?'}}
-
          else
              {Print Result}
          end
-
-         /*fun {QuestionCounterAcc CharacterList Acc}
-         local A B C D in
-            if (CharacterList != nil) then 
-               case CharacterList.1 of nil then A
-            [] character(Name 'Est-ce que c\'est une fille ?':IsGirl 'A-t-il des cheveux noirs ?':HasBlackHair 'Porte-t-il des lunettes ?':HasGlasses 'A-t-il des cheveux roux ?':HasRedHair) then 
-               {Print Name}
-               if IsGirl then A = Acc.1 + 1 else A = Acc.1 end
-               if HasBlackHair then B = Acc.2 + 1 else B = Acc.2 end
-               if HasGlasses then C = Acc.3 + 1 else C = Acc.3 end
-               if HasRedHair then D = Acc.4 + 1 else D = Acc.4 end
-               {Print Acc}
-               {QuestionCounterAcc CharacterList.2 acc(A B C D)}
-            
-            else 
-               nil
-            end
-            else
-               case CharacterList of nil then A
-            [] character(Name 'Est-ce que c\'est une fille ?':IsGirl 'A-t-il des cheveux noirs ?':HasBlackHair 'Porte-t-il des lunettes ?':HasGlasses 'A-t-il des cheveux roux ?':HasRedHair) then 
-               {Print Name}
-               if IsGirl then A = Acc.1 + 1 else A = Acc.1 end
-               if HasBlackHair then B = Acc.2 + 1 else B = Acc.2 end
-               if HasGlasses then C = Acc.3 + 1 else C = Acc.3 end
-               if HasRedHair then D = Acc.4 + 1 else D = Acc.4 end
-               {Print Acc}            
-            else 
-               nil
-            end
-      end
-    end
-   {Print {Database}}
-   {Print {QuestionCounterAcc ListOfCharacters acc(0 0 0 0)}}*/
 
          % Toujours renvoyer unit
          unit

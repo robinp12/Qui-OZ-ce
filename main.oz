@@ -5,23 +5,24 @@ import
    OS
    System
    Application
+   Open
 define
    CWD = {Atom.toString {OS.getCWD}}#"/"
    Browse = proc {$ Buf} {Browser.browse Buf} end
    Print = proc{$ S} {System.print S} end
    Args = {Application.getArgs record('nogui'(single type:bool default:false optional:true)
-									  'db'(single type:string default:CWD#"databaseTest.txt")
+									  'db'(single type:string default:CWD#"database.txt")
                              'ans'(single type:string default:CWD#"test_answers.txt"))} 
 in 
    local
+      OutputFile
       NoGUI = Args.'nogui'
       DB = Args.'db'
       ListOfCharacters = {ProjectLib.loadDatabase file Args.'db'}
-      NewCharacter = {ProjectLib.loadCharacter file CWD#"new_character.txt"}
       % Vous devez modifier le code pour que cette variable soit
       % assigné un argument 	
-      ListOfAnswersFile = CWD#"test_answers.txt"
-      ListOfAnswers = {ProjectLib.loadCharacter file CWD#"test_answers.txt"}
+      ListOfAnswersFile = CWD
+      ListOfAnswers = {ProjectLib.loadCharacter file Args.'ans'}
 
       fun {Loop X ListOfCharacters A Question}
          case X of nil then 
@@ -80,17 +81,40 @@ in
          end 
       end
 
+      proc {WriteListToFile L F}
+	 		% F must be an opened file
+	 		case L
+	 		of H|nil then
+	    		{F write(vs:H)}
+	 		[]H|T then
+	    		{F write(vs:H#",")}
+	    		{WriteListToFile T F}
+          else {F write(vs:nil)}
+	 		end
+      end
+
       fun {GameDriver Tree}
-         Result = {Response Tree}
+         Result
+         Filename = stdout
+
       in
-         % Toujours renvoyer unit  
+         Result = {New Open.file init(name: Filename
+				       flags: [write create truncate text])}
+
+         if Result == false then
+            % Arf ! L'algorithme s'est trompé !
+            {Print 'Je me suis trompé\n'}
+            {ProjectLib.surrender}
+         else
+            {WriteListToFile {Response Tree} Result}
+         end
          unit
       end
    in
 
    {ProjectLib.play opts(characters:ListOfCharacters driver:GameDriver 
-                           noGUI:false builder:TreeBuilder 
-                           autoPlay:ListOfAnswers newCharacter:NewCharacter)}
+                           noGUI:NoGUI builder:TreeBuilder 
+                           autoPlay:ListOfAnswers)}
    {Application.exit 0}
    end
 end
