@@ -71,10 +71,17 @@ in
          end
       end
 
+      fun {Response X}
+         case X of question(Q true:T false:F) then
+            if {ProjectLib.askQuestion Q} then {GameDriver T}
+            else {GameDriver F}
+            end
+         [] leaf(N) then {ProjectLib.found N}
+         end 
+      end
+
       fun {GameDriver Tree}
-         Result = 0
-         {ProjectLib.askQuestion 'Est-ce que c\'est une fille ?'}
-         {ProjectLib.found ['Minerva McGonagall']}
+         Result = {Response Tree}
       in
          % Toujours renvoyer unit  
          unit
