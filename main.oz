@@ -114,7 +114,6 @@ in
       fun {GameDriver Tree}
          Result
          Filename = stdout
-
       in
          Result = {New Open.file init(name: Filename
 				       flags: [write create truncate text])}
